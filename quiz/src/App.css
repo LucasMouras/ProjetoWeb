@@ -1,26 +1,33 @@
 /* Estilo para o corpo da página */
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }
 
 /* Estilo para o container */
 .container {
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 50px auto;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* Estilo para os elementos de formulário */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-label {
-  font-weight: bold;
+/* Estilo para os elementos de seleção */
+.form-control {
+  width: 200px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 /* Estilo para o botão */
@@ -29,28 +36,20 @@ body {
   border: none;
   color: #fff;
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 20px;
 }
 
 .btn-primary:hover {
   background-color: #2980b9;
 }
 
-/* Estilo para os elementos de seleção */
-.form-control {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-}
-
-/* Estilo para o cabeçalho da página */
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
+/* Estilo para a pergunta */
+.pergunta {
+  margin-top: 30px;
+  font-size: 18px;
+  color: #555;
 }
