@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import './App.css';
@@ -12,6 +12,7 @@ function App() {
   const [dificuldade, setDificuldade] = useState('');
   const [pergunta, setPergunta] = useState('');
   const [opcoesResposta, setOpcoesResposta] = useState([]);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const obterCategorias = async () => {
@@ -30,15 +31,16 @@ function App() {
     try {
       const resposta = await axios.get(API_URL, {
         params: {
-          amount: 1, // Quantidade de perguntas
+          amount: 1,
           category: categoria,
           difficulty: dificuldade,
-          type: 'multiple' // Tipo de pergunta (pode ser 'multiple', 'boolean', etc.)
+          type: 'multiple'
         }
       });
       const perguntaData = resposta.data.results[0];
       setPergunta(perguntaData.question);
       setOpcoesResposta(perguntaData.incorrect_answers.concat(perguntaData.correct_answer));
+      inputRef.current.focus();
     } catch (error) {
       console.error('Erro ao carregar pergunta:', error);
     }
@@ -54,7 +56,7 @@ function App() {
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="categoria">
           <Form.Label>Categoria:</Form.Label>
-          <Form.Control as="select" onChange={(e) => setCategoria(e.target.value)}>
+          <Form.Control as="select" onChange={(e) => setCategoria(e.target.value)} ref={inputRef}>
             <option value="">Selecione uma categoria</option>
             {categorias.map((categoria) => (
               <option key={categoria.id} value={categoria.id}>
