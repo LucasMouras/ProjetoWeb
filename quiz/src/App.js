@@ -11,6 +11,7 @@ function App() {
   const [categoria, setCategoria] = useState('');
   const [dificuldade, setDificuldade] = useState('');
   const [pergunta, setPergunta] = useState('');
+  const [opcoesResposta, setOpcoesResposta] = useState([]);
 
   useEffect(() => {
     const obterCategorias = async () => {
@@ -29,13 +30,15 @@ function App() {
     try {
       const resposta = await axios.get(API_URL, {
         params: {
-          amount: 1, //Quantidade de perguntas
+          amount: 1, // Quantidade de perguntas
           category: categoria,
           difficulty: dificuldade,
           type: 'multiple' // Tipo de pergunta (pode ser 'multiple', 'boolean', etc.)
         }
       });
-      setPergunta(resposta.data.results[0].question);
+      const perguntaData = resposta.data.results[0];
+      setPergunta(perguntaData.question);
+      setOpcoesResposta(perguntaData.incorrect_answers.concat(perguntaData.correct_answer));
     } catch (error) {
       console.error('Erro ao carregar pergunta:', error);
     }
@@ -73,7 +76,22 @@ function App() {
           Gerar Pergunta
         </Button>
       </Form>
-      {pergunta && <div className="pergunta">{pergunta}</div>}
+      {pergunta && (
+        <div className="pergunta">
+          <p>{pergunta}</p>
+          <Form.Group controlId="formRespostas">
+            {opcoesResposta.map((opcao, index) => (
+              <Form.Check
+                type="radio"
+                label={opcao}
+                name="opcaoResposta"
+                id={`opcaoResposta-${index}`}
+                key={`opcaoResposta-${index}`}
+              />
+            ))}
+          </Form.Group>
+        </div>
+      )}
     </Container>
   );
 }
