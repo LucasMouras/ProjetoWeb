@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-
+import './App.css'
 
 const URL_CATEGORIAS_API = 'https://opentdb.com/api_category.php';
 
