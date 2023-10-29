@@ -31,6 +31,7 @@ function App() {
   }, []);
 
   const decodificador = (html) => {
+    //Logica para tratar problema que estava enfrentando com os caracteres ao carregar as perguntas diretamente da api.
     var txt = document.createElement('textarea');
     txt.innerHTML = html;
     return txt.value;
