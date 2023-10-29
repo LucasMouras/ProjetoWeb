@@ -15,7 +15,6 @@ function App() {
   const [respostaUsuario, setRespostaUsuario] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [perguntaData, setPerguntaData] = useState(null);
-
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -30,6 +29,12 @@ function App() {
 
     obterCategorias();
   }, []);
+
+  const decodificador = (html) => {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
 
   const carregarPergunta = async () => {
     try {
@@ -95,12 +100,12 @@ function App() {
       </Form>
       {pergunta && (
         <div className="pergunta">
-          <p>{pergunta}</p>
+          <p>{decodificador(pergunta)}</p>
           <Form.Group controlId="formRespostas">
             {opcoesResposta.map((opcao, index) => (
               <Form.Check
                 type="radio"
-                label={opcao}
+                label={decodificador(opcao)}
                 name="opcaoResposta"
                 id={`opcaoResposta-${index}`}
                 key={`opcaoResposta-${index}`}
