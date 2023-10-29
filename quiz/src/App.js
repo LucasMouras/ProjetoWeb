@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import './App.css';
 
@@ -12,6 +12,10 @@ function App() {
   const [dificuldade, setDificuldade] = useState('');
   const [pergunta, setPergunta] = useState('');
   const [opcoesResposta, setOpcoesResposta] = useState([]);
+  const [respostaUsuario, setRespostaUsuario] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [perguntaData, setPerguntaData] = useState(null);
+
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -38,11 +42,22 @@ function App() {
         }
       });
       const perguntaData = resposta.data.results[0];
+      setPerguntaData(perguntaData);
       setPergunta(perguntaData.question);
       setOpcoesResposta(perguntaData.incorrect_answers.concat(perguntaData.correct_answer));
       inputRef.current.focus();
+      setRespostaUsuario('');
+      setMensagem('');
     } catch (error) {
       console.error('Erro ao carregar pergunta:', error);
+    }
+  };
+
+  const verificarResposta = () => {
+    if (respostaUsuario === perguntaData.correct_answer) {
+      setMensagem('Parabéns! Você acertou!');
+    } else {
+      setMensagem(`Ops! Você errou. A resposta correta é: ${perguntaData.correct_answer}`);
     }
   };
 
@@ -89,9 +104,14 @@ function App() {
                 name="opcaoResposta"
                 id={`opcaoResposta-${index}`}
                 key={`opcaoResposta-${index}`}
+                onChange={() => setRespostaUsuario(opcao)}
               />
             ))}
           </Form.Group>
+          <Button variant="primary" onClick={verificarResposta}>
+            Verificar Resposta
+          </Button>
+          {mensagem && <Alert variant={respostaUsuario === perguntaData.correct_answer ? 'sucesso' : 'errado'}>{mensagem}</Alert>}
         </div>
       )}
     </Container>
