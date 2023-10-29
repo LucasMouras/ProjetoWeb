@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import './App.css'
+import './App.css';
 
 const URL_CATEGORIAS_API = 'https://opentdb.com/api_category.php';
+const API_URL = 'https://opentdb.com/api.php';
 
 function App() {
   const [categorias, setCategorias] = useState([]);
   const [categoria, setCategoria] = useState('');
   const [dificuldade, setDificuldade] = useState('');
+  const [pergunta, setPergunta] = useState('');
 
   useEffect(() => {
     const obterCategorias = async () => {
@@ -23,10 +25,25 @@ function App() {
     obterCategorias();
   }, []);
 
+  const carregarPergunta = async () => {
+    try {
+      const resposta = await axios.get(API_URL, {
+        params: {
+          amount: 1, //Quantidade de perguntas
+          category: categoria,
+          difficulty: dificuldade,
+          type: 'multiple' // Tipo de pergunta (pode ser 'multiple', 'boolean', etc.)
+        }
+      });
+      setPergunta(resposta.data.results[0].question);
+    } catch (error) {
+      console.error('Erro ao carregar pergunta:', error);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Lógica para gerar pergunta com base na categoria e dificuldade selecionadas
-
+    carregarPergunta();
   };
 
   return (
@@ -56,6 +73,7 @@ function App() {
           Gerar Pergunta
         </Button>
       </Form>
+      {pergunta && <div className="pergunta">{pergunta}</div>}
     </Container>
   );
 }
