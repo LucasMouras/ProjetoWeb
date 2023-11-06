@@ -1,75 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useQuizContext } from './QuizContext';
+import { useQuestionContext } from './QuestionContext';
 import './App.css';
 
-const URL_CATEGORIAS_API = 'https://opentdb.com/api_category.php';
-const API_URL = 'https://opentdb.com/api.php';
-
 function App() {
-  const [categorias, setCategorias] = useState([]);
-  const [categoria, setCategoria] = useState('');
-  const [dificuldade, setDificuldade] = useState('');
-  const [pergunta, setPergunta] = useState('');
-  const [opcoesResposta, setOpcoesResposta] = useState([]);
+  const { categorias, categoria, setCategoria, dificuldade, setDificuldade, decodificador } = useQuizContext();
+  const { loading, perguntaData, carregarPergunta, verificarResposta } = useQuestionContext();
   const [respostaUsuario, setRespostaUsuario] = useState('');
   const [mensagem, setMensagem] = useState('');
-  const [perguntaData, setPerguntaData] = useState(null);
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    const obterCategorias = async () => {
-      try {
-        const resposta = await axios.get(URL_CATEGORIAS_API);
-        setCategorias(resposta.data.trivia_categories);
-      } catch (error) {
-        console.error('Erro ao carregar categorias:', error);
-      }
-    };
-
-    obterCategorias();
-  }, []);
-
-  const decodificador = (html) => {
-    //Logica para tratar problema que estava enfrentando com os caracteres ao carregar as perguntas diretamente da api.
-    var txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
-  };
-
-  const carregarPergunta = async () => {
-    try {
-      const resposta = await axios.get(API_URL, {
-        params: {
-          amount: 1,
-          category: categoria,
-          difficulty: dificuldade,
-          type: 'multiple'
-        }
-      });
-      const perguntaData = resposta.data.results[0];
-      setPerguntaData(perguntaData);
-      setPergunta(perguntaData.question);
-      setOpcoesResposta(perguntaData.incorrect_answers.concat(perguntaData.correct_answer));
-      inputRef.current.focus();
-      setRespostaUsuario('');
-      setMensagem('');
-    } catch (error) {
-      console.error('Erro ao carregar pergunta:', error);
-    }
-  };
-
-  const verificarResposta = () => {
-    if (respostaUsuario === perguntaData.correct_answer) {
-      setMensagem('Parabéns! Você acertou!');
-    } else {
-      setMensagem(`Ops! Você errou. A resposta correta é: ${perguntaData.correct_answer}`);
-    }
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    carregarPergunta();
+    carregarPergunta(categoria, dificuldade);
+  };
+
+  const handleVerificarResposta = () => {
+    const mensagem = verificarResposta(respostaUsuario);
+    setMensagem(mensagem);
   };
 
   return (
@@ -99,11 +48,12 @@ function App() {
           Gerar Pergunta
         </Button>
       </Form>
-      {pergunta && (
+      {loading && <p>Carregando pergunta...</p>}
+      {perguntaData && (
         <div className="pergunta">
-          <p>{decodificador(pergunta)}</p>
+          <p>{decodificador(perguntaData.question)}</p>
           <Form.Group controlId="formRespostas">
-            {opcoesResposta.map((opcao, index) => (
+            {perguntaData.options.map((opcao, index) => (
               <Form.Check
                 type="radio"
                 label={decodificador(opcao)}
@@ -114,10 +64,10 @@ function App() {
               />
             ))}
           </Form.Group>
-          <Button variant="primary" onClick={verificarResposta}>
+          <Button variant="primary" onClick={handleVerificarResposta}>
             Verificar Resposta
           </Button>
-          {mensagem && <Alert variant={respostaUsuario === perguntaData.correct_answer ? 'sucesso' : 'errado'}>{mensagem}</Alert>}
+          {mensagem && <Alert variant={respostaUsuario === perguntaData.options[3] ? 'sucesso' : 'errado'}>{mensagem}</Alert>}
         </div>
       )}
     </Container>

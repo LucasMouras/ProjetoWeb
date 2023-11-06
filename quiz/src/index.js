@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import 'react-bootstrap/dist/react-bootstrap';
+import { QuizProvider } from './QuizContext';
+import { QuestionProvider } from './QuestionContext';
+
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <QuizProvider>
+      <QuestionProvider>
+        <App />
+      </QuestionProvider>
+    </QuizProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
