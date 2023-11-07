@@ -36,7 +36,7 @@ export const QuestionProvider = ({ children }) => {
 
   const verificarResposta = (respostaUsuario) => {
     if (respostaUsuario === perguntaData.options[3]) {
-      return 'Parabéns! Você acertou!';
+      return 'Parabéns! Você acertou!!';
     } else {
       return `Ops! Você errou. A resposta correta é: ${perguntaData.options[3]}`;
     }
