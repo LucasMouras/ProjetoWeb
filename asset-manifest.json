@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/LucasMouras/ProjetoWeb/static/css/main.27eeec50.css",
+    "main.js": "/LucasMouras/ProjetoWeb/static/js/main.98bf8a1b.js",
+    "index.html": "/LucasMouras/ProjetoWeb/index.html",
+    "main.27eeec50.css.map": "/LucasMouras/ProjetoWeb/static/css/main.27eeec50.css.map",
+    "main.98bf8a1b.js.map": "/LucasMouras/ProjetoWeb/static/js/main.98bf8a1b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.27eeec50.css",
+    "static/js/main.98bf8a1b.js"
+  ]
+}
